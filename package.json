@@ -1,0 +1,13 @@
+{
+    "name": "ssh-client",
+    "version": "0.0.1",
+    "description": "simple ssh client",
+    "main": "ssh.js",
+    "scripts": {},
+    "author": "Alexey Nesterenko <alexei.ne@gmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "ssh2": "^0.8.5",
+        "yargs": "^13.3.0"
+    }
+}

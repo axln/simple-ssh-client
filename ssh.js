@@ -10,6 +10,6 @@ app.run(yargs.argv).catch(err => {
     if (err.errno == 'ECONNREFUSED') {
         Helper.errorToTerminal(`Can't connect to ${err.address}`);
     } else {
-        Helper.errorToTerminal(err);
+        Helper.errorToTerminal(err.message);
     }
 });

@@ -3,7 +3,9 @@
     "version": "0.0.1",
     "description": "simple ssh client",
     "main": "ssh.js",
-    "scripts": {},
+    "scripts": {
+        "start": "node ssh.js"
+    },
     "author": "Alexey Nesterenko <alexei.ne@gmail.com>",
     "license": "MIT",
     "dependencies": {

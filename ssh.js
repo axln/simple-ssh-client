@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 const yargs        = require('yargs');
-const SSHClientApp = require('./lib/SSHClientApp');
 const Helper       = require('./lib/Helper');
+const SSHClientApp = require('./lib/SSHClientApp');
 
 let app = new SSHClientApp();
 

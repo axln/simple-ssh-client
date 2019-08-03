@@ -1,8 +1,15 @@
 #!/usr/bin/env node
 
 const yargs        = require('yargs');
-const SSHClientAPP = require('./lib/SSHClientApp');
+const SSHClientApp = require('./lib/SSHClientApp');
+const Helper       = require('./lib/Helper');
 
-var app = new SSHClientAPP();
+var app = new SSHClientApp();
 
-app.run(yargs.argv);
+app.run(yargs.argv).catch((err) => {
+    if (err.errno == 'ECONNREFUSED') {
+        Helper.errorToTerminal(`Can't connect to ${err.address}`);
+    } else {
+     Helper.errorToTerminal(err.message);
+    }
+});

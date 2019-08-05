@@ -107,32 +107,17 @@ let tests = [
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     {
         title: 'Client: Connection and authentication',
-        run: () => {
-            return new Promise(resolve => {
+        run: async () => {
+            return new Promise(async resolve => {
                 var sshServer = new TestSSHServer(2222);
-                sshServer.on('client', function (client) {
-                    console.log('server got new client:', client);
-                    resolve();
-                });
-                return sshServer.run().then(() => {
-                    let client = new ClientProcess('user:password@127.0.0.1 -p 2222');
-                    return client.start().then(() => {
-                        console.log('output:' + client.outputBuffer);
-
-                        return client.exec('uptime').then(() => {
-
-                        });
-                        //console.log('exec output:'  + output);
-
-                        //sshServer.stop();
-                        return true;
-                    });
-                });
-
-
-                //await client.start();
-
-
+                await sshServer.run();
+                let client = new ClientProcess('user:password@127.0.0.1 -p 2222');
+                await client.start();
+                await Helper.delay(1000);
+                var lines = client.outputBuffer.toString().split('\n');
+                client.close();
+                sshServer.stop();
+                resolve(lines[2] == 'Welcome to the SSH test server!');
             });
         }
     }
@@ -145,13 +130,13 @@ async function runTests() {
     for (let i = 0; i < tests.length; ++i) {
         let test = tests[i];
         var dotCount = test.title.length < TAB_LENGTH ? TAB_LENGTH - test.title.length : 3;
-        console.log(`${i+1}/${tests.length}: ${test.title}`.yellow + '.'.repeat(3).yellow);
+        process.stdout.write(`${i+1}/${tests.length}: ${test.title}`.yellow + '.'.repeat(dotCount).yellow);
         //console.log(`Test: ${test.title}`);
         var result = await test.run();
         if (result) {
-            console.log(`${i+1}/${tests.length}: Passed`.green)
+            console.log('Passed'.green);
         } else {
-            console.log(`${i+1}/${tests.length}: Failed`.red);
+            console.log('Failed'.red);
             console.log('Testing stopped'.red);
             break;
         }

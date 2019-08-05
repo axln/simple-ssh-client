@@ -6,7 +6,7 @@ const Helper        = require('./Helper');
 class ClientProcess {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     constructor(cmdLine) {
-        ClientProcess.EXEC_DELAY = 500;
+        ClientProcess.EXEC_DELAY = 1000;
 
         this.cmdLine      = cmdLine;
         this.child        = null;
@@ -19,7 +19,6 @@ class ClientProcess {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     start() {
         return new Promise((resolve, reject) => {
-            console.log('starting client');
             var scriptFileName = path.join(__dirname, '../../ssh.js');
             this.child = child_process.fork(scriptFileName, this.cmdLine.split(' '), {
                 cwd: path.join(__dirname, '../../'),
@@ -51,20 +50,17 @@ class ClientProcess {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    async exec(cmd) {
-        this.outputBuffer = null;
-        this.stdin.write(cmd + '\n');
-        await Helper.delay(ClientProcess.EXEC_DELAY);
-        return this.outputBuffer;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     onData(buffer) {
         if (this.outputBuffer) {
             this.outputBuffer = Buffer.concat([this.outputBuffer, buffer]);
         } else {
             this.outputBuffer = buffer;
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    close() {
+        this.child.kill();
     }
 }
 

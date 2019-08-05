@@ -45,8 +45,7 @@ class TestSSHServer extends EventEmitter {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     onClient(client) {
-        console.log('Client connected');
-        this.emit('client', client);
+        //console.log('Client connected');
         client.on('authentication', this.onClientAuth.bind(this));
         client.on('ready', () => {
             this.onClientReady(client);
@@ -75,7 +74,8 @@ class TestSSHServer extends EventEmitter {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     onClientReady(client) {
-        console.log('client authenticated');
+        //console.log('client authenticated');
+        this.emit('client', client);
         client.on('session', function (accept, reject) {
             var session = accept();
             session.on('pty', function (accept, reject, info) {
@@ -84,38 +84,9 @@ class TestSSHServer extends EventEmitter {
             session.on('shell', function (accept, reject) {
                 var stream = accept();
                 var closed = false;
-                stream.write('Welcome to the SSH test server!\r\n');
-                stream.write('user@server$ ');
-                var rl = readline.createInterface({
-                    input: stream,
-                    output: stream,
-                    prompt: 'user@server$ '
-                });
-                rl.on('line', function (line) {
-                    console.log('line:', line);
-                    if (line == 'exit') {
-                        stream.write('\r\nlogout\r\n');
-                        stream.end();
-                        stream.exit(0);
-                        closed = true;
-                    } else {
-                        stream.write('\r\n' + line + '\r\n');
-                        rl.prompt();
-                    }
-
-                });
-                stream.on('data', function (data) {
-                    if (!closed) {
-                        stream.write(data);
-                    }
-                });
-
-                stream.on('end', function () {
-                    console.log('stream closed');
-                });
+                stream.write('Welcome to the SSH test server!');
             });
         });
-
     }
 }
 

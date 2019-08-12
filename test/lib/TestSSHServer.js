@@ -16,7 +16,6 @@ class TestSSHServer extends EventEmitter {
         this.port = port;
         this.allowedUser = Buffer.from('user');
         this.allowedPass = Buffer.from('password');
-
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
